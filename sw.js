@@ -1,5 +1,5 @@
 // Our trips offline cache
-const V = 'ot-v1';
+const V = 'ot-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'];
@@ -37,7 +37,7 @@ self.addEventListener('fetch', e => {
     return;
   }
   // Exchange rate: always network, wallet keeps the last rate itself
-  if (url.hostname === 'open.er-api.com') return;
+  if (['open.er-api.com','api.open-meteo.com','api.github.com'].includes(url.hostname) || url.hostname.endsWith('githubusercontent.com')) return;
   // Everything else (fonts, Leaflet, icons): cache first, then network
   e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
     if (r.ok || r.type === 'opaque') { const cp = r.clone(); caches.open(V).then(c => c.put(req, cp)); }
